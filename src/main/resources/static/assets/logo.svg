@@ -1,0 +1,22 @@
+<svg width="500" height="120" viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sphere" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6A2A"></stop>
+      <stop offset="100%" stop-color="#FF4D0D"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Sphere -->
+  <circle cx="60" cy="60" r="42" fill="url(#sphere)"></circle>
+
+  <!-- H -->
+  <path d="M45 35V85M75 35V85M45 60H75" stroke="white" stroke-width="8" stroke-linecap="round"></path>
+
+  <!-- Orbit -->
+  <ellipse cx="60" cy="60" rx="50" ry="20" fill="none" stroke="#0B2D52" stroke-width="4"></ellipse>
+
+  <!-- Text -->
+  <text x="130" y="75" font-family="Poppins, Arial, sans-serif" font-size="42" font-weight="600" fill="#FFFFFF">
+    Hire<tspan fill="#FF5A1F">Sphere</tspan>
+  </text>
+</svg>

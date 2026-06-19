@@ -49,6 +49,15 @@ public class JobPostActivity {
     private Date postedDate;
     private String jobTitle;
 
+    /** Delegate so dashboard template works uniformly for both RecruiterJobsDto and JobPostActivity */
+    @Transient
+    public JobLocation getJobLocation() {
+        return jobLocationId;
+    }
 
-
+    @Transient
+    public JobCompany getJobCompany() {
+        return jobCompanyId;
+    }
 }
+

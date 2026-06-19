@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Candidate Profile - HireSphere</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <link rel="icon" type="image/png" th:href="@{/assets/favicon.png}"/>
+    
+    <style>
+        .profile-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .profile-header {
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #f8f9fa;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        }
+        .info-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .info-value {
+            font-size: 1.1rem;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+        .skill-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .resume-btn {
+            background-color: #fb4f14;
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .resume-btn:hover {
+            background-color: #d14010;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<header class="navbar navbar-expand-lg navbar-dark">
+    <label class="mt-2 ms-5 font-weight-bold h5">
+        <img th:src="@{/assets/logo.svg}" alt="HireSphere Logo" style="height:40px;"/>
+    </label>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav m-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard/add}">
+                    <i class="fa-solid fa-file-circle-plus"></i>Post New Job
+                </a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard/}"> 
+                    <i class="fa-solid fa-eye"></i>View Your Jobs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/recruiter-profile/}"> 
+                    <i class="fa-solid fa-pencil"></i>Edit Account
+                </a>
+            </li>
+        </ul>
+
+        <img class="rounded-circle me-3" height="50px" width="50px" th:if="${user.photosImagePath!=null}" th:src="@{${user?.photosImagePath}}" />
+        <img th:unless="${user.photosImagePath!=null}" class="rounded-circle me-3" height="50px" width="50px" src="https://ui-avatars.com/api/?background=0B2D52&color=fff&name=U" />
+
+        <label th:if="${user.firstName != null && user.lastName != null}" th:text="${user.firstName+' '+user.lastName}" class="nav-item nav-link px-2 me-3"></label>
+        <label th:unless="${user.firstName != null && user.lastName != null}" th:text="${username}" class="nav-item nav-link px-2 me-3"></label>
+
+        <button class="myBtn-light me-5" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+</header>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="profile-card">
+                <div class="profile-header text-center">
+                    <img th:if="${profile.photosImagePath != null}" th:src="@{${profile.photosImagePath}}" alt="Candidate Photo" class="profile-photo mb-3"/>
+                    <img th:unless="${profile.photosImagePath != null}" src="https://ui-avatars.com/api/?background=0B2D52&color=fff&size=150" alt="Default Candidate Photo" class="profile-photo mb-3"/>
+                    
+                    <h2 class="font-weight-bold" th:text="${profile.firstName + ' ' + profile.lastName}">John Doe</h2>
+                    <p class="text-muted" th:text="${profile.city + ', ' + profile.state + ', ' + profile.country}">City, State, Country</p>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="info-label">Employment Type</div>
+                        <div class="info-value" th:text="${profile.employmentType ?: 'Not specified'}">Full-time</div>
+                        
+                        <div class="info-label">Work Authorization</div>
+                        <div class="info-value" th:text="${profile.workAuthorazation ?: 'Not specified'}">Authorized</div>
+                    </div>
+                    
+                    <div class="col-md-6 text-md-right d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                        <div>
+                            <div class="info-label mb-2 text-md-right">Resume</div>
+                            <a th:if="${profile.resume != null}" th:href="@{/photos/jobseeker/{id}/{resume}(id=${profile.userAccountId}, resume=${profile.resume})}" target="_blank" class="resume-btn">
+                                <i class="fa-solid fa-file-pdf mr-2"></i> View Resume
+                            </a>
+                            <span th:unless="${profile.resume != null}" class="text-muted font-italic">No Resume Uploaded</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4" th:if="${profile.skills != null && !profile.skills.isEmpty()}">
+                    <div class="info-label">Skills</div>
+                    <div class="mt-2">
+                        <span class="skill-badge" th:each="skill : ${profile.skills}" th:if="${skill.name != null && !skill.name.isEmpty()}">
+                            <i class="fa-solid fa-check text-success mr-1"></i>
+                            <span th:text="${skill.name}">Skill Name</span>
+                            <small class="text-muted ml-1" th:text="'(' + ${skill.yearsOfExperience} + ' yrs, ' + ${skill.experienceLevel} + ')'"></small>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mt-5 text-center">
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">Back to Job Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

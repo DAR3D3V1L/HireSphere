@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}"/>
+    <link rel="icon" type="image/png" th:href="@{/assets/favicon.png}"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Job Seeker Profile - HireSphere</title>
+</head>
+
+<body>
+<div class="row" style="margin-right:0">
+    <div class="col-5 Job-portal-register">
+        <div class="logo_left mt-3 pt-4 ms-5 pl-5">
+            <img th:src="@{/assets/logo.svg}" alt="HireSphere Logo" style="height:50px;"/>
+        </div>
+    </div>
+    <div class=" col-7">
+        <div class="myForm">
+            <form th:action="@{/job-seeker-profile/addNew}" th:object="${profile}" method="post"
+                  enctype="multipart/form-data">
+                <div class="row gutters ">
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-center ">
+                                <h1 class="heading_font font-weight-bold">
+                                    Job Seeker
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <h2 class="d-flex justify-content-center heading_font">
+                                        Set up your Profile
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div class="card-body ms-2.5">
+                                <label class="heading_font font_sub_heading_color">Name</label>
+                                <div class="row ">
+                                    <div class="col-md-6 pr-1">
+                                        <input placeholder="First Name" id="firstName" th:field="*{firstName}"
+                                               name="firstName" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-6 pl-1">
+                                        <input placeholder="Last Name" id="lastName" name="lastName"
+                                               th:field="*{lastName}" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-4 pr-1">
+                                        <input placeholder="City" name="city" th:field="*{city}" type="text"
+                                               class="form-control"/>
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <input placeholder="State" name="state" type="text" th:field="*{state}"
+                                               class="form-control"/>
+                                    </div>
+                                    <div class="col-md-4 pl-1">
+                                        <input placeholder="Country" name="country" th:field="*{country}" type="text"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-6 pr-1">
+                                        <input placeholder="Work Authorization" name="workAuthorazation"
+                                               th:field="*{workAuthorazation}" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-6 pl-1">
+                                        <input placeholder="Employment Type" name="employmentType"
+                                               th:field="*{employmentType}" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <label class="heading_font font_sub_heading_color mt-2">Skills</label>
+                                <div th:each="skill, stat : *{skills}">
+                                    <div class="row">
+                                        <input type="hidden" th:field="*{skills[__${stat.index}__].id}" />
+                                        <div class="col-md-4 pr-1">
+                                            <input placeholder="Skill Name" th:field="*{skills[__${stat.index}__].name}"
+                                                   type="text" class="form-control"/>
+                                        </div>
+                                        <div class="col-md-4 px-1">
+                                            <input placeholder="Years of Experience"
+                                                   th:field="*{skills[__${stat.index}__].yearsOfExperience}" type="text"
+                                                   class="form-control"/>
+                                        </div>
+                                        <div class="col-md-4 pl-1">
+                                            <input placeholder="Experience Level"
+                                                   th:field="*{skills[__${stat.index}__].experienceLevel}" type="text"
+                                                   class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label class="heading_font font_sub_heading_color mt-2">Profile Photo</label>
+                                <div class="row">
+                                    <div class="col" sec:authorize="hasAuthority('Job Seeker')">
+                                        <input type="file" name="image" class="form-control" accept="image/png, image/jpeg"/>
+                                        <input type="text" name="profilePhoto" th:field="*{profilePhoto}" class="form-control" hidden/>
+                                    </div>
+                                    <div class="col" sec:authorize="hasAuthority('Recruiter')">
+                                        <img th:if="${profile.photosImagePath != null}" th:src="@{${profile.photosImagePath}}" style="max-height: 100px;" />
+                                    </div>
+                                </div>
+
+                                <label class="heading_font font_sub_heading_color mt-2">Resume (PDF)</label>
+                                <div class="row">
+                                    <div class="col" sec:authorize="hasAuthority('Job Seeker')">
+                                        <input type="file" name="pdf" class="form-control" accept="application/pdf"/>
+                                        <input type="text" name="resume" th:field="*{resume}" class="form-control" hidden/>
+                                    </div>
+                                    <div class="col" sec:authorize="hasAuthority('Recruiter')">
+                                        <a th:if="${profile.resume != null}" th:href="@{/photos/jobseeker/{id}/{resume}(id=${profile.userAccountId}, resume=${profile.resume})}" target="_blank" class="btn btn-info">View Resume</a>
+                                        <span th:unless="${profile.resume != null}">No Resume Provided</span>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4" sec:authorize="hasAuthority('Job Seeker')">
+                                    <div class="col d-flex justify-content-center">
+                                        <button type="submit" id="submit2" name="submit"
+                                                class="btn btn-primary base_button px-4 py-2">Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+</html>

@@ -41,7 +41,11 @@ public class UsersController {
 
     @PostMapping("/register/new")
     public String userRegistration(@Valid Users users, BindingResult result, Model model) {
-       usersService.addNew(users);
+        if (result.hasErrors()) {
+            model.addAttribute("getAllTypes", usersTypeService.getAll());
+            return "register";
+        }
+        usersService.addNew(users);
         return "redirect:/dashboard/";
     }
 

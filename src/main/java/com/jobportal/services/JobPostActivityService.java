@@ -36,7 +36,21 @@ public class JobPostActivityService {
         return recruiterJobsDtoList;
     }
     public JobPostActivity getOne(int id) {
+        return jobPostActivityRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found"));
+    }
 
-        return jobPostActivityRepository.findById(id).orElseThrow(()->new RuntimeException("Job not found"));
+    public void deleteById(int id) {
+        jobPostActivityRepository.deleteById(id);
+    }
+
+    public List<JobPostActivity> getAll() {
+        return jobPostActivityRepository.findAll();
+    }
+
+    public List<JobPostActivity> search(String job, String location) {
+        if ((job == null || job.trim().isEmpty()) && (location == null || location.trim().isEmpty())) {
+            return jobPostActivityRepository.findAll();
+        }
+        return jobPostActivityRepository.search(job, location);
     }
 }

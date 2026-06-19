@@ -62,15 +62,17 @@ public class RecruiterProfileController {
         }
         model.addAttribute("profile", recruiterProfile);
         String fileName = "";
-        if (!multipartFile.getOriginalFilename().equals("")) {
+        if (multipartFile != null && multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
             fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             recruiterProfile.setProfilePhoto(fileName);
         }
         RecruiterProfile savedUser = recruiterProfileService.addNew(recruiterProfile);
 
-        String uploadDir = "photos/recruiter/" + savedUser.getUserAccountId();
         try {
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            if (!fileName.equals("")) {
+                String uploadDir = "photos/recruiter/" + savedUser.getUserAccountId();
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

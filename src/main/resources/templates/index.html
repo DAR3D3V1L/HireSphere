@@ -1,62 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Job Portal - Home</title>
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/font-awesome.min.css}"/>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}"/>
-    <meta charset="ISO-8859-1">
+    <title>HireSphere - Job Portal</title>
+    <link rel="icon" type="image/png" th:href="@{/assets/logo.svg}" />
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} " />
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}" />
 
 </head>
-<body  class="background">
-<nav class="main_div">
-    <div class="logo_left">
-        <label class="logo">
-            FreshersJobs
-        </label>
-        <label class="logo_com">
-            .com
-        </label>
-    </div>
-    <div class="logo_right">
-        <label class="Candidate_login_btn">
-            <a th:href="@{/login}">
-                User Login
-            </a>
-            <a th:href="@{/register}">
-                | Register
-            </a>
-        </label>
-        <label class="Recruiter_login_btn">
-            <a th:href="@{/login}">
-                Recruiter Login
-            </a>
-            <a th:href="@{/register}">
-                | Register
-            </a>
 
-        </label>
-    </div>
-</nav>
-<form th:action="@{/global-search/}">
-    <div class="searchBox">
-        <div class="inner">
+<body class="background">
+    <nav class="main_div">
+        <div class="logo_left">
+            <img th:src="@{/assets/logo.svg}" alt="HireSphere Logo" style="height:50px;" />
+        </div>
+        <div class="logo_right">
+            <label class="Candidate_login_btn">
+                <a th:href="@{/login}">
+                    Login
+                </a>
+                <a th:href="@{/register}">
+                    | Register
+                </a>
+            </label>
+        </div>
+    </nav>
+    <form th:action="@{/global-search/}">
+        <div class="searchBox">
+            <div class="inner">
 
-            <input type="text" placeholder="Search for a job" name="job" th:value="${job}"/>
-            <input type="text" placeholder="Enter a location" name="location" th:value="${location}"/>
-            <button type="submit"><i class="fa fa-search"></i></button>
+                <input type="text" placeholder="Search for a job" name="job" th:value="${job}" />
+                <input type="text" placeholder="Enter a location" name="location" th:value="${location}" />
+                <button type="submit"><i class="fa fa-search"></i></button>
 
+            </div>
+        </div>
+    </form>
+
+    <div class="container mt-5" th:if="${jobResults != null}">
+        <h3 class="text-center mb-4">Search Results</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div th:if="${jobResults.isEmpty()}" class="alert alert-info text-center">
+                    No jobs found matching your search.
+                </div>
+
+                <th:block th:each="jobPost : ${jobResults}">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title font-weight-bold mb-1" th:text="${jobPost.jobTitle}">Job Title
+                                    </h5>
+                                    <h6 class="card-subtitle text-muted mb-2" th:text="${jobPost.jobCompany.name}">
+                                        Company</h6>
+                                    <p class="card-text mb-0">
+                                        <i class="fa fa-map-marker text-danger"></i>
+                                        <span
+                                            th:text="${jobPost.jobLocation.city + ', ' + jobPost.jobLocation.state + ', ' + jobPost.jobLocation.country}">Location</span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
+                                        class="btn btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
         </div>
     </div>
-</form>
-<footer>
-    <label class="copy-right">Copyright © Deepak Singh</label>
-</footer>
+    <footer>
+        <label class="copy-right">Copyright © Devansh Prajapati</label>
+    </footer>
 
 
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 
 </body>
+
 </html>

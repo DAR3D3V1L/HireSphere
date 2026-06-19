@@ -14,15 +14,14 @@
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}"/>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
     <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <link rel="icon" type="image/png" th:href="@{/assets/favicon.png}"/>
 
 </head>
 
 <body>
 <header class="navbar navbar-expand-lg navbar-dark">
     <label class="mt-2 ms-5 font-weight-bold h5"
-    ><a href="/">FreshersJobs</a
-    ><span class="logo_com font-weight-bold h5" style="color: white">.com</span
-    ></label
+    ><img th:src="@{/assets/logo.svg}" alt="HireSphere Logo" style="height:40px;"/></label
     >
     <button
             class="navbar-toggler"
@@ -74,9 +73,15 @@
         <img
                 class="rounded-circle me-3"
                 height="50px"
-                width="50x"
+                width="50px"
                 th:if="${user.photosImagePath!=null}"
                 th:src="@{${user?.photosImagePath}}"
+        />
+        <img th:unless="${user.photosImagePath!=null}"
+                class="rounded-circle me-3"
+                height="50px"
+                width="50px"
+                src="https://ui-avatars.com/api/?background=0B2D52&color=fff&name=U"
         />
 
         <label th:if="${user.firstName != null && user.lastName != null}"
@@ -93,6 +98,21 @@
 
 <section class="section">
     <div class="sidenav px-5">
+        <div sec:authorize="hasAuthority('Job Seeker')">
+            <label class="text-uppercase color-dull font-weight-bold">Filter Results</label>
+            <hr />
+            <form th:action="@{/dashboard/}">
+                <div class="form-group mb-3">
+                    <label>Job Title</label>
+                    <input type="text" class="form-control" name="job" th:value="${job}" placeholder="Search for a job">
+                </div>
+                <div class="form-group mb-4">
+                    <label>Location</label>
+                    <input type="text" class="form-control" name="location" th:value="${location}" placeholder="City, State, or Country">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </form>
+        </div>
     </div>
     <article>
         <div class="box" sec:authorize="hasAuthority('Recruiter')">
@@ -135,13 +155,13 @@
                             </div>
                             <div class="col-md-4 text-center">
                                 <label
-                                        th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.state}"
+                                        th:text="${jobPost.jobLocation.city+', '+ jobPost.jobLocation.state}"
                                 >
                                     City State</label
                                 >
                             </div>
                             <div class="col-md-4 text-right">
-                                <label th:text="@{${jobPost.jobCompanyId.name}}"
+                                <label th:text="${jobPost.jobCompany.name}"
                                 >Recruiter Company Name</label
                                 >
                             </div>
